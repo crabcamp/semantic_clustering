@@ -1,0 +1,5 @@
+-r core.txt
+-r ci.txt
+
+ipython
+ipdb
