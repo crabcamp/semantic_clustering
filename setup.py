@@ -15,7 +15,7 @@ with readme.open(mode='rt', encoding='utf-8') as fp:
 setup(
     name='keywords_similarity',
     version='0.0.1',
-    description='Sets of keywords similarity.',
+    description='Semantic clustering of keywords groups',
     long_description=readme_text,
     license='MIT',
     author='Luka Shostenko',
