@@ -1,7 +1,7 @@
 keywords_similarity
 ===================
 
-Semantic clustering of keywords groups.
+Semantic clustering of keyword groups
 
 References
 ----------
