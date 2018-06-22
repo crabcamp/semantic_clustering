@@ -1,7 +1,6 @@
 import numpy as np
 from nltk.corpus import wordnet as wn
 
-
 SIMILARITY_MEASURE = {
     'jcn': wn.jcn_similarity,
     'lin': wn.lin_similarity,
