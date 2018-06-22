@@ -31,6 +31,29 @@ def _calculate_similarity_matrix(synsets_1, synsets_2, method='wup'):
     return similarity_matrix
 
 
+def _group_similarity(similarity_matrix):
+    n_1, n_2 = similarity_matrix.shape
+
+    if n_1 > n_2:
+        similarity_matrix = similarity_matrix.T
+        n_1, n_2 = n_2, n_1
+
+    total_score = 0.
+    matched_ixs = set()
+
+    for i_1 in range(n_1):
+        for i_2 in np.argsort(similarity_matrix[i_1])[:: -1]:
+            if i_2 not in matched_ixs:
+                matched_ixs.add(i_2)
+                total_score += similarity_matrix[i_1, i_2]
+                break
+
+    for i_2 in set(range(n_2)) - matched_ixs:
+        total_score += similarity_matrix[: i_2].max()
+
+    return total_score / n_2
+
+
 def _keywords2synsets(keywords, only_nouns=True):
     synsets = []
 
@@ -45,6 +68,3 @@ def _keywords2synsets(keywords, only_nouns=True):
             synsets.append(word_synonyms[0])
 
     return synsets
-
-
-
