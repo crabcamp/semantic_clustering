@@ -22,6 +22,7 @@ setup(
     author_email='luka.shostenko@gmail.com',
     url='https://github.com/LShostenko/keywords_similarity/',
     packages=find_packages(include=['keywords_similarity.*']),
+    py_modules=['keywords_similarity.match'],
     python_requires='>=3.5.0',
     install_requires=install_requires,
     include_package_data=True,

@@ -1,6 +1,7 @@
 import math
 
 import numpy as np
+
 from keywords_similarity.match import _greedy_matching_similarity
 
 
@@ -15,3 +16,10 @@ def test_greedy_matching_similarity():
     expected = (1. + 0.8 + 0.2 + 0.2) / 4
 
     assert math.isclose(res, expected)
+
+
+def random_mat(size=(10, 10), threshold=.7):
+    a = np.random.rand(size[0] * size[1])
+    a[a > threshold] = 1.
+
+    return np.array(a).reshape(size)
