@@ -1,12 +1,8 @@
 import numpy as np
 
 
-def _matching_similarity(similarity_matrix):
-    n_1, n_2 = similarity_matrix.shape
-
-    if n_1 > n_2:
-        similarity_matrix = similarity_matrix.T
-        n_1, n_2 = n_2, n_1
+def _greedy_matching_similarity(similarity_matrix):
+    n_1, n_2 = similarity_matrix.shape  # n_1 <= n_2
 
     total_score = 0.
 
