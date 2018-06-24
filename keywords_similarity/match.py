@@ -14,11 +14,11 @@ def _matching_similarity(similarity_matrix):
     matched_2 = set()
 
     sorted_ixs = np.unravel_index(
-        similarity_matrix.asgsort(axis=None)[:: -1],
+        similarity_matrix.argsort(axis=None)[:: -1],
         similarity_matrix.shape,
     )
 
-    for i_1, i_2 in sorted_ixs:
+    for i_1, i_2 in zip(*sorted_ixs):
         if i_1 in matched_1 or i_2 in matched_2:
             continue
 
@@ -30,6 +30,6 @@ def _matching_similarity(similarity_matrix):
             break
 
     for i_2 in set(range(n_2)) - matched_2:
-        total_score += similarity_matrix[: i_2].max()
+        total_score += similarity_matrix[:, i_2].max()
 
     return total_score / n_2
