@@ -26,8 +26,8 @@ def greedy_matching_similarity(similarity_matrix):
         if len(matched_1) == n_1:
             break
 
-    for i_2 in set(range(n_2)) - matched_2:
-        total_score += similarity_matrix[:, i_2].max()
+    non_matched = np.setdiff1d(np.arange(n_2), list(matched_2))
+    total_score += similarity_matrix[:, non_matched].max(axis=0).sum()
 
     return total_score / n_2
 

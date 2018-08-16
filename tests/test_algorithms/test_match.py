@@ -18,6 +18,24 @@ def test_greedy_matching_similarity():
 
     assert math.isclose(res, expected)
 
+    similarity_matrix = np.ones((10, 20))
+    res = greedy_matching_similarity(similarity_matrix)
+    expected = 1
+
+    assert math.isclose(res, expected)
+
+    similarity_matrix = np.zeros((10, 20))
+    res = greedy_matching_similarity(similarity_matrix)
+    expected = 0
+    assert math.isclose(res, expected)
+
+    similarity_matrix = np.random.rand(10, 10)
+    similarity_matrix[np.arange(10), np.arange(10)] = 1
+    res = greedy_matching_similarity(similarity_matrix)
+    expected = 1
+
+    assert math.isclose(res, expected)
+
 
 def test_hungarian_matching_similarity():
     similarity_matrix = np.array([
