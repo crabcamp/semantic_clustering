@@ -20,7 +20,7 @@ setup(
     license='MIT',
     author='Luka Shostenko',
     author_email='luka.shostenko@gmail.com',
-    url='https://github.com/LShostenko/keywords_similarity/',
+    url='https://github.com/nlp-libs/keywords_similarity/',
     packages=find_packages(include=['keywords_similarity.*']),
     python_requires='>=3.5.0',
     install_requires=install_requires,
