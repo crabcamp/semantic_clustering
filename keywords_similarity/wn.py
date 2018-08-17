@@ -23,7 +23,7 @@ def get_similarity_method(method):
         return wn.wup_similarity
 
 
-def keywords2synsets(keywords, only_nouns=True):
+def keywords2synsets(keywords, only_nouns=True, keep_duplicates=True):
     synsets = []
 
     for word in keywords:
@@ -35,5 +35,8 @@ def keywords2synsets(keywords, only_nouns=True):
 
         if word_synonyms:
             synsets.append(word_synonyms[0])
+
+    if not keep_duplicates:
+        synsets = sorted(list(set(synsets)), key=synsets.index)
 
     return synsets
