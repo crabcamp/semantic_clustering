@@ -38,7 +38,7 @@ def hungarian_matching_similarity(similarity_matrix):
     cost_matrix = np.ones((n_2, n_2))
     cost_matrix[:n_1] -= similarity_matrix
 
-    ixs_1, ixs_2 = linear_sum_assignment(cost_matrix)  # ixs_1 = np.arange(n_2)
+    ixs_1, ixs_2 = linear_sum_assignment(cost_matrix)
 
     if n_1 != n_2:
         ixs_1[n_1:] = np.argmax(similarity_matrix[:, ixs_2[n_1:]], axis=0)
