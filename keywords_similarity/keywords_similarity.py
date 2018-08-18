@@ -16,10 +16,12 @@ def _calculate_similarity_matrix(group_1, group_2, similarity_function):
     for i, j in product(range(n_1), range(n_2)):
         similarity_matrix[i, j] = similarity_function(group_1[i], group_2[j])
 
+    np.nan_to_num(similarity_matrix, copy=False)
+
     return similarity_matrix
 
 
-def orthographic_keywords_similarity(
+def keywords_string_similarity(
     keywords_1,
     keywords_2,
     similarity_function=Levenshtein().get_sim_score,
@@ -41,7 +43,7 @@ def orthographic_keywords_similarity(
     return matching_similarity(similarity_matrix, greedy=greedy)
 
 
-def semantic_keywords_similarity(
+def keywords_semantic_similarity(
     keywords_1,
     keywords_2,
     similarity_metric='wup',
