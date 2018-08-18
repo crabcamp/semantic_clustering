@@ -39,7 +39,7 @@ def keywords_similarity(
     if np.any(similarity_matrix > 1) or np.any(similarity_matrix < 0):
         raise ValueError('incorrect similarity function')
 
-    return matching_similarity(similarity_matrix)
+    return matching_similarity(similarity_matrix, greedy=greedy)
 
 
 def semantic_keywords_similarity(
@@ -72,4 +72,4 @@ def semantic_keywords_similarity(
     sim_func = get_similarity_function(similarity_metric)
     similarity_matrix = _calculate_similarity_matrix(ss_1, ss_2, sim_func)
 
-    return matching_similarity(similarity_matrix)
+    return matching_similarity(similarity_matrix, greedy=greedy)
