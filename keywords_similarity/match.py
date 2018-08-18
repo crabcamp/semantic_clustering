@@ -2,7 +2,7 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment
 
 
-def greedy_matching_similarity(similarity_matrix):
+def _greedy_matching_similarity(similarity_matrix):
     n_1, n_2 = similarity_matrix.shape  # n_1 <= n_2
 
     total_score = 0.
@@ -32,7 +32,7 @@ def greedy_matching_similarity(similarity_matrix):
     return total_score / n_2
 
 
-def hungarian_matching_similarity(similarity_matrix):
+def _hungarian_matching_similarity(similarity_matrix):
     n_1, n_2 = similarity_matrix.shape  # n_1 <= n_2
 
     cost_matrix = np.ones((n_2, n_2))
@@ -46,3 +46,15 @@ def hungarian_matching_similarity(similarity_matrix):
     similarity = similarity_matrix[ixs_1, ixs_2].mean()
 
     return similarity
+
+
+def matching_similarity(similarity_matrix, greedy=False):
+    n_1, n_2 = similarity_matrix.shape
+
+    if n_1 > n_2:
+        similarity_matrix = similarity_matrix.T
+
+    if greedy:
+        return _greedy_matching_similarity(similarity_matrix)
+
+    return _hungarian_matching_similarity(similarity_matrix)

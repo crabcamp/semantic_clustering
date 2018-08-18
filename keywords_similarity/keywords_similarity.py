@@ -3,9 +3,7 @@ import warnings
 import numpy as np
 from py_stringmatching import Levenshtein
 
-from keywords_similarity.match import (
-    greedy_matching_similarity, hungarian_matching_similarity,
-)
+from keywords_similarity.match import matching_similarity
 from keywords_similarity.wn import get_similarity_function, keywords2synsets
 
 
@@ -41,13 +39,7 @@ def keywords_similarity(
     if np.any(similarity_matrix > 1) or np.any(similarity_matrix < 0):
         raise ValueError('incorrect similarity function')
 
-    if len(keywords_1) > len(keywords_2):
-        similarity_matrix = similarity_matrix.T
-
-    if greedy:
-        return greedy_matching_similarity(similarity_matrix)
-
-    return hungarian_matching_similarity(similarity_matrix)
+    return matching_similarity(similarity_matrix)
 
 
 def semantic_keywords_similarity(
@@ -69,7 +61,8 @@ def semantic_keywords_similarity(
 
         if not synset:
             warnings.warn(
-                'failed to convert keywords to synsets', RuntimeWarning,
+                'failed to convert keywords to synsets',
+                RuntimeWarning,
             )
             return 0.
 
@@ -79,10 +72,4 @@ def semantic_keywords_similarity(
     sim_func = get_similarity_function(similarity_metric)
     similarity_matrix = _calculate_similarity_matrix(ss_1, ss_2, sim_func)
 
-    if len(ss_1) > len(ss_2):
-        similarity_matrix = similarity_matrix.T
-
-    if greedy:
-        return greedy_matching_similarity(similarity_matrix)
-
-    return hungarian_matching_similarity(similarity_matrix)
+    return matching_similarity(similarity_matrix)
