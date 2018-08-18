@@ -3,7 +3,7 @@ from nltk.corpus import wordnet as wn
 SIMILARITY_METHODS = ['jcn', 'lin', 'path', 'wup']
 
 
-def get_similarity_method(method):
+def get_similarity_function(method):
     method = method.lower()
 
     if method not in SIMILARITY_METHODS:
