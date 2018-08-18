@@ -19,7 +19,7 @@ def _calculate_similarity_matrix(group_1, group_2, similarity_function):
     return similarity_matrix
 
 
-def keywords_similarity(
+def orthographic_keywords_similarity(
     keywords_1,
     keywords_2,
     similarity_function=Levenshtein().get_sim_score,
