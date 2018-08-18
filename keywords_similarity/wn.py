@@ -1,6 +1,6 @@
 from nltk.corpus import wordnet as wn
 
-SIMILARITY_METHODS = ['jcn', 'lin', 'path', 'wup']
+SIMILARITY_METHODS = ('path', 'wup')
 
 
 def get_similarity_function(method):
@@ -10,13 +10,7 @@ def get_similarity_function(method):
         methods_repr = str(SIMILARITY_METHODS)
         raise ValueError('Available values for \'method\' are ' + methods_repr)
 
-    if method == 'jcn':
-        return wn.jcn_similarity
-
-    elif method == 'lin':
-        return wn.lin_similarity
-
-    elif method == 'path':
+    if method == 'path':
         return wn.path_similarity
 
     elif method == 'wup':
