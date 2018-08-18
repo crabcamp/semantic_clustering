@@ -21,28 +21,6 @@ def _calculate_similarity_matrix(group_1, group_2, similarity_function):
     return similarity_matrix
 
 
-def keywords_string_similarity(
-    keywords_1,
-    keywords_2,
-    similarity_function=Levenshtein().get_sim_score,
-    greedy=False,
-):
-    if not keywords_1 or not keywords_2:
-        warnings.warn('empty keywords', RuntimeWarning)
-        return 0.
-
-    similarity_matrix = _calculate_similarity_matrix(
-        keywords_1,
-        keywords_2,
-        similarity_function,
-    )
-
-    if np.any(similarity_matrix > 1) or np.any(similarity_matrix < 0):
-        raise ValueError('incorrect similarity function')
-
-    return matching_similarity(similarity_matrix, greedy=greedy)
-
-
 def keywords_semantic_similarity(
     keywords_1,
     keywords_2,
@@ -72,5 +50,27 @@ def keywords_semantic_similarity(
     ss_1, ss_2 = synsets
     sim_func = get_similarity_function(similarity_metric)
     similarity_matrix = _calculate_similarity_matrix(ss_1, ss_2, sim_func)
+
+    return matching_similarity(similarity_matrix, greedy=greedy)
+
+
+def keywords_string_similarity(
+    keywords_1,
+    keywords_2,
+    similarity_function=Levenshtein().get_sim_score,
+    greedy=False,
+):
+    if not keywords_1 or not keywords_2:
+        warnings.warn('empty keywords', RuntimeWarning)
+        return 0.
+
+    similarity_matrix = _calculate_similarity_matrix(
+        keywords_1,
+        keywords_2,
+        similarity_function,
+    )
+
+    if np.any(similarity_matrix > 1) or np.any(similarity_matrix < 0):
+        raise ValueError('incorrect similarity function')
 
     return matching_similarity(similarity_matrix, greedy=greedy)
