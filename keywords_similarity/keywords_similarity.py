@@ -41,8 +41,8 @@ def keywords_similarity(
     if np.any(similarity_matrix > 1) or np.any(similarity_matrix < 0):
         raise ValueError('incorrect similarity function')
 
-    if not keywords_1 or not keywords_2:
-        return None
+    if len(keywords_1) > len(keywords_2):
+        similarity_matrix = similarity_matrix.T
 
     if greedy:
         return greedy_matching_similarity(similarity_matrix)
@@ -62,7 +62,7 @@ def semantic_keywords_similarity(
 
     for keywords in (keywords_1, keywords_2):
         synset = keywords2synsets(
-            keywords_2,
+            keywords,
             only_nouns=only_nouns,
             keep_duplicates=keep_duplicates,
         )
@@ -78,6 +78,9 @@ def semantic_keywords_similarity(
     ss_1, ss_2 = synsets
     sim_func = get_similarity_function(similarity_metric)
     similarity_matrix = _calculate_similarity_matrix(ss_1, ss_2, sim_func)
+
+    if len(ss_1) > len(ss_2):
+        similarity_matrix = similarity_matrix.T
 
     if greedy:
         return greedy_matching_similarity(similarity_matrix)
