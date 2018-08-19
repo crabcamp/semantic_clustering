@@ -46,13 +46,13 @@ def keywords2synsets(keywords, only_nouns=True, keep_duplicates=True):
 
 @lru_cache(maxsize=65536)
 def path_similarity_cached(synset_1, synset_2):
-    arg = sorted([synset_1, synset_2])
+    args = sorted([synset_1, synset_2])
 
-    return wn.path_similarity(arg)
+    return wn.path_similarity(*args)
 
 
 @lru_cache(maxsize=65536)
 def wup_similarity_cached(synset_1, synset_2):
-    arg = sorted([synset_1, synset_2])
+    args = sorted([synset_1, synset_2])
 
-    return wn.wup_similarity(arg)
+    return wn.wup_similarity(*args)
