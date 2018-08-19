@@ -6,6 +6,7 @@ from py_stringmatching import Levenshtein
 from keywords_similarity.keywords_similarity import (
     keywords_semantic_similarity, keywords_string_similarity,
 )
+from keywords_similarity.wn import SIMILARITY_METHODS
 
 
 def test_keywords_semantic_similarity():
@@ -29,6 +30,22 @@ def test_keywords_semantic_similarity():
 
     result = keywords_semantic_similarity(keywords_1, [])
     assert math.isclose(result, 0)
+
+    for method in SIMILARITY_METHODS:
+        result = keywords_semantic_similarity(
+            keywords_1,
+            keywords_2,
+            similarity_metric=method,
+        )
+
+        assert 0 <= result <= 1
+
+    with pytest.raises(ValueError):
+        keywords_semantic_similarity(
+            keywords_1,
+            keywords_2,
+            similarity_metric='Skål',
+        )
 
 
 def test_keywords_string_similarity():

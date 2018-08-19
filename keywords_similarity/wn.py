@@ -15,7 +15,7 @@ def get_similarity_function(method):
     if method == 'path':
         return wn.path_similarity
 
-    if method == 'path_cached':
+    elif method == 'path_cached':
         return path_similarity_cached
 
     elif method == 'wup':
