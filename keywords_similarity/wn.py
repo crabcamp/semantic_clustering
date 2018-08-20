@@ -6,8 +6,6 @@ SIMILARITY_METHODS = ('path', 'path_cached', 'wup', 'wup_cached')
 
 
 def get_similarity_function(method):
-    method = method.lower()
-
     if method not in SIMILARITY_METHODS:
         methods_repr = str(SIMILARITY_METHODS)
         raise ValueError('Available values for \'method\' are ' + methods_repr)
@@ -46,13 +44,13 @@ def keywords2synsets(keywords, only_nouns=True, keep_duplicates=True):
 
 @lru_cache(maxsize=1048576)
 def path_similarity_cached(synset_1, synset_2):
-    args = sorted([synset_1, synset_2])
+    synsets = sorted([synset_1, synset_2])
 
-    return wn.path_similarity(*args)
+    return wn.path_similarity(*synsets)
 
 
 @lru_cache(maxsize=1048576)
 def wup_similarity_cached(synset_1, synset_2):
-    args = sorted([synset_1, synset_2])
+    synsets = sorted([synset_1, synset_2])
 
-    return wn.wup_similarity(*args)
+    return wn.wup_similarity(*synsets)
