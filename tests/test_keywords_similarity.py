@@ -12,6 +12,8 @@ from keywords_similarity.wn import SIMILARITY_METHODS
 def test_keywords_semantic_similarity():
     keywords_1 = ['cafe', 'restaurant', 'pasta', 'pizza', 'lasagna', 'italian']
     keywords_2 = ['hotdog', 'coffee', 'burgers', 'cheeseburger', 'amazing']
+    keywords_3 = ['pizza']
+    keywords_4 = ['pizza', 'pizzas', 'amazing']
 
     result = keywords_semantic_similarity(keywords_1, keywords_2)
     expected = 0.579156223893066
@@ -30,6 +32,24 @@ def test_keywords_semantic_similarity():
 
     result = keywords_semantic_similarity(keywords_1, [])
     assert math.isclose(result, 0)
+
+    result = keywords_semantic_similarity(
+        keywords_3,
+        keywords_4,
+        keep_duplicates=True,
+        only_nouns=False,
+    )
+    expected = 2 / 3
+    assert math.isclose(result, expected)
+
+    result = keywords_semantic_similarity(
+        keywords_3,
+        keywords_4,
+        keep_duplicates=False,
+        only_nouns=False,
+    )
+    expected = 1 / 2
+    assert math.isclose(result, expected)
 
     for method in SIMILARITY_METHODS:
         result = keywords_semantic_similarity(

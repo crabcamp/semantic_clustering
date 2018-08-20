@@ -5,7 +5,7 @@ import numpy as np
 from py_stringmatching import Levenshtein
 
 from keywords_similarity.match import matching_similarity
-from keywords_similarity.wn import get_similarity_function, keywords2synsets
+from keywords_similarity.wn import get_similarity_function, keywords_to_synsets
 
 
 def _calculate_similarity_matrix(group_1, group_2, similarity_function):
@@ -34,7 +34,7 @@ def keywords_semantic_similarity(
     synsets = []
 
     for keywords in (keywords_1, keywords_2):
-        synset = keywords2synsets(
+        synset = keywords_to_synsets(
             keywords,
             only_nouns=only_nouns,
             keep_duplicates=keep_duplicates,

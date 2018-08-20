@@ -23,7 +23,7 @@ def get_similarity_function(method):
         return wup_similarity_cached
 
 
-def keywords2synsets(keywords, only_nouns=True, keep_duplicates=True):
+def keywords_to_synsets(keywords, only_nouns=True, keep_duplicates=True):
     synsets = []
 
     for word in keywords:
