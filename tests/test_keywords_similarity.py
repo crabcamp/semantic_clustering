@@ -21,7 +21,8 @@ def test_keywords_semantic_similarity():
     assert math.isclose(result, expected)
 
     result = keywords_semantic_similarity(
-        keywords_1, keywords_2,
+        keywords_1,
+        keywords_2,
         only_nouns=False,
     )
     expected = 0.46248955722639934
@@ -34,7 +35,8 @@ def test_keywords_semantic_similarity():
     assert math.isclose(result, 0)
 
     result = keywords_semantic_similarity(
-        keywords_3, keywords_4,
+        keywords_3,
+        keywords_4,
         keep_duplicates=True,
         only_nouns=False,
     )
@@ -42,7 +44,8 @@ def test_keywords_semantic_similarity():
     assert math.isclose(result, expected)
 
     result = keywords_semantic_similarity(
-        keywords_3, keywords_4,
+        keywords_3,
+        keywords_4,
         keep_duplicates=False,
         only_nouns=False,
     )
@@ -51,7 +54,8 @@ def test_keywords_semantic_similarity():
 
     for method in SIMILARITY_METHODS:
         result = keywords_semantic_similarity(
-            keywords_1, keywords_2,
+            keywords_1,
+            keywords_2,
             similarity_metric=method,
         )
 
@@ -66,7 +70,8 @@ def test_keywords_semantic_similarity():
 
     with pytest.raises(ValueError):
         keywords_semantic_similarity(
-            keywords_1, keywords_2,
+            keywords_1,
+            keywords_2,
             similarity_metric='Skål',
         )
 
