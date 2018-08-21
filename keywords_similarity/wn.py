@@ -1,4 +1,4 @@
-from functools import lru_cache
+from functools import lru_cache, partial
 
 from nltk.corpus import wordnet as wn
 
@@ -11,13 +11,13 @@ def get_similarity_function(method):
         raise ValueError('Available values for \'method\' are ' + methods_repr)
 
     if method == 'path':
-        return wn.path_similarity
+        return partial(wn.path_similarity, simulate_root=False)
 
     elif method == 'path_cached':
         return path_similarity_cached
 
     elif method == 'wup':
-        return wn.wup_similarity
+        return partial(wn.wup_similarity, simulate_root=False)
 
     elif method == 'wup_cached':
         return wup_similarity_cached
@@ -46,11 +46,11 @@ def keywords_to_synsets(keywords, only_nouns=True, keep_duplicates=True):
 def path_similarity_cached(synset_1, synset_2):
     synsets = sorted([synset_1, synset_2])
 
-    return wn.path_similarity(*synsets)
+    return wn.path_similarity(*synsets, simulate_root=False)
 
 
 @lru_cache(maxsize=1048576)
 def wup_similarity_cached(synset_1, synset_2):
     synsets = sorted([synset_1, synset_2])
 
-    return wn.wup_similarity(*synsets)
+    return wn.wup_similarity(*synsets, simulate_root=False)
