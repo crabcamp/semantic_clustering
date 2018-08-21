@@ -1,4 +1,5 @@
 import math
+from itertools import product
 
 import pytest
 from py_stringmatching import Levenshtein
@@ -20,8 +21,7 @@ def test_keywords_semantic_similarity():
     assert math.isclose(result, expected)
 
     result = keywords_semantic_similarity(
-        keywords_1,
-        keywords_2,
+        keywords_1, keywords_2,
         only_nouns=False,
     )
     expected = 0.46248955722639934
@@ -33,51 +33,47 @@ def test_keywords_semantic_similarity():
     result = keywords_semantic_similarity(keywords_1, [])
     assert math.isclose(result, 0)
 
-    result_1 = keywords_semantic_similarity(
-        keywords_3,
-        keywords_4,
-        keep_duplicates=True,
-        only_nouns=False,
-    )
-    result_2 = keywords_semantic_similarity(
-        keywords_4,
-        keywords_3,
+    result = keywords_semantic_similarity(
+        keywords_3, keywords_4,
         keep_duplicates=True,
         only_nouns=False,
     )
     expected = 2 / 3
-    assert math.isclose(result_1, expected)
-    assert math.isclose(result_2, expected)
+    assert math.isclose(result, expected)
 
-    result_1 = keywords_semantic_similarity(
-        keywords_3,
-        keywords_4,
-        keep_duplicates=False,
-        only_nouns=False,
-    )
-    result_2 = keywords_semantic_similarity(
-        keywords_4,
-        keywords_3,
+    result = keywords_semantic_similarity(
+        keywords_3, keywords_4,
         keep_duplicates=False,
         only_nouns=False,
     )
     expected = 1 / 2
-    assert math.isclose(result_1, expected)
-    assert math.isclose(result_2, expected)
+    assert math.isclose(result, expected)
 
     for method in SIMILARITY_METHODS:
         result = keywords_semantic_similarity(
-            keywords_1,
-            keywords_2,
+            keywords_1, keywords_2,
             similarity_metric=method,
         )
 
         assert 0 <= result <= 1
 
+    keyword_groups = [keywords_1, keywords_2, keywords_3, keywords_4]
+
+    for kws_1, kws_2 in product(keyword_groups, keyword_groups):
+        res_1 = keywords_semantic_similarity(
+            kws_1, kws_2,
+            similarity_metric='wup_cached',
+        )
+        res_2 = keywords_semantic_similarity(
+            kws_2, kws_1,
+            similarity_metric='wup_cached',
+        )
+
+        assert math.isclose(res_1, res_2)
+
     with pytest.raises(ValueError):
         keywords_semantic_similarity(
-            keywords_1,
-            keywords_2,
+            keywords_1, keywords_2,
             similarity_metric='Skål',
         )
 
