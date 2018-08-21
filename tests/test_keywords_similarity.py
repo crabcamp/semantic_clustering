@@ -60,14 +60,8 @@ def test_keywords_semantic_similarity():
     keyword_groups = [keywords_1, keywords_2, keywords_3, keywords_4]
 
     for kws_1, kws_2 in product(keyword_groups, keyword_groups):
-        res_1 = keywords_semantic_similarity(
-            kws_1, kws_2,
-            similarity_metric='wup_cached',
-        )
-        res_2 = keywords_semantic_similarity(
-            kws_2, kws_1,
-            similarity_metric='wup_cached',
-        )
+        res_1 = keywords_semantic_similarity(kws_1, kws_2)
+        res_2 = keywords_semantic_similarity(kws_2, kws_1)
         assert math.isclose(res_1, res_2)
 
     with pytest.raises(ValueError):
