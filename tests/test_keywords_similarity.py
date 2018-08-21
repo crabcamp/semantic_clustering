@@ -68,7 +68,6 @@ def test_keywords_semantic_similarity():
             kws_2, kws_1,
             similarity_metric='wup_cached',
         )
-
         assert math.isclose(res_1, res_2)
 
     with pytest.raises(ValueError):
