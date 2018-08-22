@@ -34,23 +34,22 @@ def test_keywords_semantic_similarity():
     result = keywords_semantic_similarity(keywords_1, [])
     assert math.isclose(result, 0)
 
-    result = keywords_semantic_similarity(
+    result_1 = keywords_semantic_similarity(
         keywords_3,
         keywords_4,
         keep_duplicates=True,
         only_nouns=False,
     )
-    expected = 2 / 3
-    assert math.isclose(result, expected)
-
-    result = keywords_semantic_similarity(
+    result_2 = keywords_semantic_similarity(
         keywords_3,
         keywords_4,
         keep_duplicates=False,
         only_nouns=False,
     )
-    expected = 1 / 2
-    assert math.isclose(result, expected)
+    expected_1 = 2 / 3
+    expected_2 = 1 / 2
+    assert math.isclose(result_1, expected_1)
+    assert math.isclose(result_2, expected_2)
 
     for method in SIMILARITY_METHODS:
         result = keywords_semantic_similarity(
