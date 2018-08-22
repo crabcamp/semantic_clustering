@@ -62,12 +62,8 @@ def keywords_string_similarity(
     keywords_2,
     similarity_function=Levenshtein().get_sim_score,
     greedy=False,
-    silent=True,
 ):
     if not keywords_1 or not keywords_2:
-        if not silent:
-            warnings.warn('empty keywords', RuntimeWarning)
-
         return 0.
 
     similarity_matrix = _calculate_similarity_matrix(
