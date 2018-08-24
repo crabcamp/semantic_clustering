@@ -27,6 +27,11 @@ def keywords_to_synsets(keywords, only_nouns=True, keep_duplicates=True):
     synsets = []
 
     for word in keywords:
+        splitted = word.split()
+
+        if splitted:
+            word = '_'.join(splitted)
+
         if only_nouns:
             word_synonyms = wn.synsets(word, 'n')
 
@@ -40,6 +45,22 @@ def keywords_to_synsets(keywords, only_nouns=True, keep_duplicates=True):
         synsets = sorted(list(set(synsets)), key=synsets.index)
 
     return synsets
+
+
+def normalize_keywords(keywords, only_nouns=True, keep_duplicates=True):
+    synsets = keywords_to_synsets(
+        keywords,
+        only_nouns=only_nouns,
+        keep_duplicates=keep_duplicates,
+    )
+
+    normalized = []
+
+    for synset in synsets:
+        name = synset.name()
+        normalized.append(name.split('.')[0])
+
+    return normalized
 
 
 @lru_cache(maxsize=1048576)
