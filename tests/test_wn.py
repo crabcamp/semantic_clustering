@@ -5,9 +5,9 @@ def test_normalize_keywords():
     keywords = ['automotive vehicle', 'automobile', 'car']
 
     res = normalize_keywords(keywords, keep_duplicates=True)
-    expected = ['motor_vehicle', 'car', 'car']
+    expected = ['motor vehicle', 'car', 'car']
 
     assert res == expected
 
     res = normalize_keywords(keywords, keep_duplicates=False)
-    expected = ['motor_vehicle', 'car']
+    expected = ['motor vehicle', 'car']

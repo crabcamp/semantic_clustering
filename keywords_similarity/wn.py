@@ -58,7 +58,10 @@ def normalize_keywords(keywords, only_nouns=True, keep_duplicates=True):
 
     for synset in synsets:
         name = synset.name()
-        normalized.append(name.split('.')[0])
+        name = name.split('.')[0]
+        name = name.replace('_', ' ')
+
+        normalized.append(name)
 
     return normalized
 
