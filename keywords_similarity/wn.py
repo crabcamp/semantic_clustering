@@ -29,7 +29,7 @@ def keywords_to_synsets(keywords, only_nouns=True, keep_duplicates=True):
     for word in keywords:
         splitted = word.split()
 
-        if splitted:
+        if len(splitted) > 1:
             word = '_'.join(splitted)
 
         if only_nouns:
