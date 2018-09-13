@@ -1,8 +1,23 @@
 from functools import lru_cache, partial
+from itertools import chain
 
 from nltk.corpus import wordnet as wn
 
 SIMILARITY_METHODS = ('path', 'path_cached', 'wup', 'wup_cached')
+
+
+@lru_cache(maxsize=1048576)
+def path_similarity_cached(synset_1, synset_2):
+    synsets = sorted([synset_1, synset_2])
+
+    return wn.path_similarity(*synsets, simulate_root=False)
+
+
+@lru_cache(maxsize=1048576)
+def wup_similarity_cached(synset_1, synset_2):
+    synsets = sorted([synset_1, synset_2])
+
+    return wn.wup_similarity(*synsets, simulate_root=False)
 
 
 def get_similarity_function(method):
@@ -23,23 +38,33 @@ def get_similarity_function(method):
         return wup_similarity_cached
 
 
-def keywords_to_synsets(keywords, only_nouns=True, keep_duplicates=True):
+def keywords_to_synsets(
+    keywords,
+    only_nouns=True,
+    max_len=3,
+    keep_duplicates=True,
+):
     synsets = []
 
-    for word in keywords:
-        splitted = word.split()
+    for keyword in keywords:
+        tokens = keyword.split()
 
-        if len(splitted) > 1:
-            word = '_'.join(splitted)
+        if len(tokens) == 1:
+            synset = _token_to_synset(keyword, only_nouns=only_nouns)
 
-        if only_nouns:
-            word_synonyms = wn.synsets(word, 'n')
+            if synset is not None:
+                synsets.append(synset)
 
-        else:
-            word_synonyms = wn.synsets(word)
+            continue
 
-        if word_synonyms:
-            synsets.append(word_synonyms[0])
+        keyword_synsets = _sentence_tokens_to_synsets(
+            tokens,
+            only_nouns=only_nouns,
+            max_len=max_len,
+        )
+
+        if keyword_synsets:
+            synsets.extend(keyword_synsets)
 
     if not keep_duplicates:
         synsets = sorted(list(set(synsets)), key=synsets.index)
@@ -47,34 +72,67 @@ def keywords_to_synsets(keywords, only_nouns=True, keep_duplicates=True):
     return synsets
 
 
-def normalize_keywords(keywords, only_nouns=True, keep_duplicates=True):
+def normalize_keywords(
+    keywords,
+    only_nouns=True,
+    max_len=3,
+    keep_duplicates=True,
+):
     synsets = keywords_to_synsets(
         keywords,
         only_nouns=only_nouns,
+        max_len=max_len,
         keep_duplicates=keep_duplicates,
     )
 
-    normalized = []
+    normalized_keywords = []
 
     for synset in synsets:
         name = synset.name()
         name = name.split('.')[0]
         name = name.replace('_', ' ')
 
-        normalized.append(name)
+        normalized_keywords.append(name)
 
-    return normalized
-
-
-@lru_cache(maxsize=1048576)
-def path_similarity_cached(synset_1, synset_2):
-    synsets = sorted([synset_1, synset_2])
-
-    return wn.path_similarity(*synsets, simulate_root=False)
+    return normalized_keywords
 
 
-@lru_cache(maxsize=1048576)
-def wup_similarity_cached(synset_1, synset_2):
-    synsets = sorted([synset_1, synset_2])
+def _subsequences_indices(sequence, max_len=None):
+    if max_len is None:
+        max_len = len(sequence)
 
-    return wn.wup_similarity(*synsets, simulate_root=False)
+    ixs = (
+        zip(range(len(sequence)), range(n, len(sequence) + 1))
+        for n in range(max_len, 0, -1)
+    )
+
+    yield from chain(*ixs)
+
+
+def _token_to_synset(token, only_nouns=True):
+    if only_nouns:
+        word_synonyms = wn.synsets(token, 'n')
+
+    else:
+        word_synonyms = wn.synsets(token)
+
+    if word_synonyms:
+        return word_synonyms[0]
+
+
+def _sentence_tokens_to_synsets(tokens, only_nouns=True, max_len=3):
+    synsets = []
+    seen = set()
+
+    for start, end in _subsequences_indices(tokens, max_len=max_len):
+        if start in seen or end in seen:
+            continue
+
+        wn_candidate = '_'.join(tokens[start: end])
+        synset = _token_to_synset(wn_candidate, only_nouns=only_nouns)
+
+        if synset is not None:
+            synsets.append(synset)
+            seen.update(range(start, end))
+
+    return synsets
