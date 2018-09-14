@@ -16,13 +16,18 @@ def test_keywords_semantic_similarity():
     keywords_3 = ['pizza']
     keywords_4 = ['pizza', 'pizzas', 'amazing']
 
-    result = keywords_semantic_similarity(keywords_1, keywords_2)
+    result = keywords_semantic_similarity(
+        keywords_1,
+        keywords_2,
+        similarity_metric='wup',
+    )
     expected = 0.579156223893066
     assert math.isclose(result, expected)
 
     result = keywords_semantic_similarity(
         keywords_1,
         keywords_2,
+        similarity_metric='wup',
         only_nouns=False,
     )
     expected = 0.46248955722639934
@@ -37,8 +42,9 @@ def test_keywords_semantic_similarity():
     result_1 = keywords_semantic_similarity(
         keywords_3,
         keywords_4,
-        keep_duplicates=True,
+        similarity_metric='wup',
         only_nouns=False,
+        keep_duplicates=True,
     )
     result_2 = keywords_semantic_similarity(
         keywords_3,

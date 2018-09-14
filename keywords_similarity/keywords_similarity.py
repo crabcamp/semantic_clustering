@@ -25,9 +25,11 @@ def keywords_semantic_similarity(
     keywords_1,
     keywords_2,
     similarity_metric='wup',
-    greedy=False,
-    keep_duplicates=True,
+    max_lemma_words=3,
+    min_lemma_chars=3,
     only_nouns=True,
+    keep_duplicates=True,
+    greedy=False,
     silent=True,
 ):
     sim_func = get_similarity_function(similarity_metric)
@@ -36,6 +38,8 @@ def keywords_semantic_similarity(
     for keywords in (keywords_1, keywords_2):
         synset = keywords_to_synsets(
             keywords,
+            max_lemma_words=max_lemma_words,
+            min_lemma_chars=min_lemma_chars,
             only_nouns=only_nouns,
             keep_duplicates=keep_duplicates,
         )

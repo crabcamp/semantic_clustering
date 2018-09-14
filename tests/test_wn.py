@@ -15,8 +15,38 @@ def test_normalize_keywords():
     keywords = [
         'harassment skål automotive vehicle bonjorno amore sexual harassment',
     ]
-    result = normalize_keywords(keywords, keep_duplicates=True)
+    result = normalize_keywords(keywords)
     expected = ['motor vehicle', 'sexual harassment', 'harassment']
+    assert result == expected
+
+    keywords = ['automotive vehicle sexual harassment']
+    result = normalize_keywords(keywords, max_lemma_words=2, only_nouns=False)
+    expected = ['motor vehicle', 'sexual harassment']
+    assert result == expected
+
+    keywords = ['automotive vehicle sexual harassment']
+    result = normalize_keywords(keywords, max_lemma_words=1, only_nouns=False)
+    expected = ['automotive', 'vehicle', 'sexual', 'harassment']
+    assert result == expected
+
+    keywords = ['a coyote']
+    result = normalize_keywords(keywords, min_lemma_chars=3)
+    expected = ['coyote']
+    assert result == expected
+
+    keywords = ['a coyote']
+    result = normalize_keywords(keywords, min_lemma_chars=1)
+    expected = ['angstrom', 'coyote']
+    assert result == expected
+
+    keywords = ['c69821bcb6a88393 96f9652b6ff72a70']
+    result = normalize_keywords(keywords)
+    expected = []
+    assert result == expected
+
+    keywords = []
+    result = normalize_keywords(keywords)
+    expected = []
     assert result == expected
 
 

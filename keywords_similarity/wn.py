@@ -40,8 +40,9 @@ def get_similarity_function(method):
 
 def keywords_to_synsets(
     keywords,
+    max_lemma_words=3,
+    min_lemma_chars=3,
     only_nouns=True,
-    max_len=3,
     keep_duplicates=True,
 ):
     synsets = []
@@ -60,7 +61,8 @@ def keywords_to_synsets(
         keyword_synsets = _sentence_tokens_to_synsets(
             tokens,
             only_nouns=only_nouns,
-            max_len=max_len,
+            max_lemma_words=max_lemma_words,
+            min_lemma_chars=min_lemma_chars,
         )
 
         if keyword_synsets:
@@ -75,13 +77,15 @@ def keywords_to_synsets(
 def normalize_keywords(
     keywords,
     only_nouns=True,
-    max_len=3,
+    max_lemma_words=3,
+    min_lemma_chars=3,
     keep_duplicates=True,
 ):
     synsets = keywords_to_synsets(
         keywords,
         only_nouns=only_nouns,
-        max_len=max_len,
+        max_lemma_words=max_lemma_words,
+        min_lemma_chars=min_lemma_chars,
         keep_duplicates=keep_duplicates,
     )
 
@@ -109,7 +113,10 @@ def _subsequences_indices(sequence, max_len=None):
     yield from chain(*ixs)
 
 
-def _token_to_synset(token, only_nouns=True):
+def _token_to_synset(token, min_lemma_chars=3, only_nouns=True):
+    if len(token) < min_lemma_chars:
+        return
+
     if only_nouns:
         word_synonyms = wn.synsets(token, 'n')
 
@@ -120,16 +127,25 @@ def _token_to_synset(token, only_nouns=True):
         return word_synonyms[0]
 
 
-def _sentence_tokens_to_synsets(tokens, only_nouns=True, max_len=3):
+def _sentence_tokens_to_synsets(
+    tokens,
+    only_nouns=True,
+    max_lemma_words=3,
+    min_lemma_chars=3,
+):
     synsets = []
     seen = set()
 
-    for start, end in _subsequences_indices(tokens, max_len=max_len):
+    for start, end in _subsequences_indices(tokens, max_len=max_lemma_words):
         if start in seen or end in seen:
             continue
 
         wn_candidate = '_'.join(tokens[start: end])
-        synset = _token_to_synset(wn_candidate, only_nouns=only_nouns)
+        synset = _token_to_synset(
+            wn_candidate,
+            min_lemma_chars=min_lemma_chars,
+            only_nouns=only_nouns,
+        )
 
         if synset is not None:
             synsets.append(synset)
