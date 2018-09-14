@@ -51,7 +51,11 @@ def keywords_to_synsets(
         tokens = keyword.split()
 
         if len(tokens) == 1:
-            synset = _token_to_synset(keyword, only_nouns=only_nouns)
+            synset = _token_to_synset(
+                keyword,
+                min_lemma_chars=min_lemma_chars,
+                only_nouns=only_nouns,
+            )
 
             if synset is not None:
                 synsets.append(synset)
