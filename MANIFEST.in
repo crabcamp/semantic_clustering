@@ -1,5 +1,3 @@
-graft lexrank/assets
-
 include requirements/core.txt
 
 global-exclude *.pyc
