@@ -39,8 +39,23 @@ def test_normalize_keywords():
     expected = ['angstrom', 'coyote']
     assert result == expected
 
-    keywords = ['c69821bcb6a88393 96f9652b6ff72a70']
-    result = normalize_keywords(keywords)
+    keywords = ['c69821bcb6a88393 96f9652b6ff72a70', 'harassment']
+    result = normalize_keywords(keywords, include_unknown=True)
+    expected = ['c69821bcb6a88393 96f9652b6ff72a70', 'harassment']
+    assert result == expected
+
+    keywords = ['c69821bcb6a88393 96f9652b6ff72a70', 'harassment']
+    result = normalize_keywords(keywords, include_unknown=False)
+    expected = ['harassment']
+    assert result == expected
+
+    keywords = ['beautiful', 'incredible']
+    result = normalize_keywords(keywords, only_nouns=False)
+    expected = ['beautiful', 'incredible']
+    assert result == expected
+
+    keywords = ['beautiful', 'incredible']
+    result = normalize_keywords(keywords, only_nouns=True)
     expected = []
     assert result == expected
 

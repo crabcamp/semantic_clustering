@@ -100,8 +100,8 @@ def normalize_keywords(
         if not synsets:
             if include_unknown:
                 normalized_keywords.append(keyword)
-            else:
-                continue
+
+            continue
 
         for synset in synsets:
             if only_nouns and synset.pos() != 'n':
@@ -114,8 +114,10 @@ def normalize_keywords(
             normalized_keywords.append(name)
 
     if not keep_duplicates:
-        normalized_keywords = list(set(normalized_keywords))
-        normalized_keywords.sort(key=normalized_keywords.index)
+        normalized_keywords = sorted(
+            list(set(normalized_keywords)),
+            key=normalized_keywords.index,
+        )
 
     return normalized_keywords
 
