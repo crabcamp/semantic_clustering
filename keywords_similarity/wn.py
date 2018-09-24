@@ -84,23 +84,40 @@ def normalize_keywords(
     max_lemma_words=3,
     min_lemma_chars=3,
     keep_duplicates=True,
+    include_unknown=False,
 ):
-    synsets = keywords_to_synsets(
-        keywords,
-        only_nouns=only_nouns,
-        max_lemma_words=max_lemma_words,
-        min_lemma_chars=min_lemma_chars,
-        keep_duplicates=keep_duplicates,
-    )
-
     normalized_keywords = []
 
-    for synset in synsets:
-        name = synset.name()
-        name = name.split('.')[0]
-        name = name.replace('_', ' ')
+    for keyword in keywords:
+        synsets = keywords_to_synsets(
+            [keyword],
+            only_nouns=False,
+            max_lemma_words=max_lemma_words,
+            min_lemma_chars=min_lemma_chars,
+            keep_duplicates=False,
+        )
 
-        normalized_keywords.append(name)
+        if not synsets:
+            if include_unknown:
+                normalized_keywords.append(keyword)
+
+            continue
+
+        for synset in synsets:
+            if only_nouns and synset.pos() != 'n':
+                continue
+
+            name = synset.name()
+            name = name.split('.')[0]
+            name = name.replace('_', ' ')
+
+            normalized_keywords.append(name)
+
+    if not keep_duplicates:
+        normalized_keywords = sorted(
+            list(set(normalized_keywords)),
+            key=normalized_keywords.index,
+        )
 
     return normalized_keywords
 
