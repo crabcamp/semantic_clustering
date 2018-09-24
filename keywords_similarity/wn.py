@@ -1,5 +1,6 @@
 from functools import lru_cache, partial
 from itertools import chain
+from typing import Any, List
 
 from nltk.corpus import wordnet as wn
 
@@ -39,12 +40,12 @@ def get_similarity_function(method):
 
 
 def keywords_to_synsets(
-    keywords,
-    max_lemma_words=3,
-    min_lemma_chars=3,
-    only_nouns=True,
-    keep_duplicates=True,
-):
+    keywords: List[str],
+    max_lemma_words: int = 3,
+    min_lemma_chars: int = 3,
+    only_nouns: bool = True,
+    keep_duplicates: bool = True,
+) -> List[Any]:
     synsets = []
 
     for keyword in keywords:
@@ -79,13 +80,13 @@ def keywords_to_synsets(
 
 
 def normalize_keywords(
-    keywords,
-    only_nouns=True,
-    max_lemma_words=3,
-    min_lemma_chars=3,
-    keep_duplicates=True,
-    include_unknown=False,
-):
+    keywords: List[str],
+    max_lemma_words: int = 3,
+    min_lemma_chars: int = 3,
+    only_nouns: bool = True,
+    keep_duplicates: bool = True,
+    include_unknown: bool = False,
+) -> List[str]:
     normalized_keywords = []
 
     for keyword in keywords:
