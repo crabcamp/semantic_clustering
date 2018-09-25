@@ -15,6 +15,7 @@ def test_keywords_semantic_similarity():
     keywords_2 = ['hotdog', 'coffee', 'burgers', 'cheeseburger', 'amazing']
     keywords_3 = ['pizza']
     keywords_4 = ['pizza', 'pizzas', 'amazing']
+    unknown_keywords = ['Skål', 'Синхрофазотрон']
 
     result = keywords_semantic_similarity(
         keywords_1,
@@ -66,7 +67,13 @@ def test_keywords_semantic_similarity():
 
         assert 0 <= result <= 1
 
-    keyword_groups = [keywords_1, keywords_2, keywords_3, keywords_4]
+    keyword_groups = [
+        keywords_1,
+        keywords_2,
+        keywords_3,
+        keywords_4,
+        unknown_keywords,
+    ]
 
     for kws_1, kws_2 in product(keyword_groups, keyword_groups):
         res_1 = keywords_semantic_similarity(kws_1, kws_2)
@@ -79,6 +86,19 @@ def test_keywords_semantic_similarity():
             keywords_2,
             similarity_metric='Skål',
         )
+
+    result = keywords_semantic_similarity(keywords_1, unknown_keywords)
+    expected = 0.
+    assert math.isclose(result, expected)
+
+    with pytest.warns(RuntimeWarning):
+        result = keywords_semantic_similarity(
+            keywords_1,
+            unknown_keywords,
+            silent=False,
+        )
+        expected = 0.
+        assert math.isclose(result, expected)
 
 
 def test_keywords_string_similarity():
