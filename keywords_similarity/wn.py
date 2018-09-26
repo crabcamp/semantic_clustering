@@ -38,6 +38,30 @@ def get_similarity_function(method):
         return wup_similarity_cached
 
 
+def get_available_synsets(normalized_keywords, only_nouns=True):
+    synsets = []
+    unknown_keywords = []
+
+    for keyword in normalized_keywords:
+        lemma = '_'.join(keyword.split())
+        keyword_synsets = wn.synsets(lemma)
+
+        if not keyword_synsets:
+            unknown_keywords.append(keyword)
+            continue
+
+        if not only_nouns:
+            synsets.append(keyword_synsets[0])
+            continue
+
+        for synset in keyword_synsets:
+            if synset.pos() == 'n':
+                synsets.append(synset)
+                break
+
+    return synsets, unknown_keywords
+
+
 def keywords_to_synsets(
     keywords,
     max_lemma_words=3,
