@@ -6,7 +6,9 @@ import numpy as np
 from py_stringmatching import Levenshtein
 
 from keywords_similarity.match import matching_similarity
-from keywords_similarity.wn import get_similarity_function, keywords_to_synsets
+from keywords_similarity.wn import (
+    get_available_synsets, get_similarity_function, keywords_to_synsets,
+)
 
 
 def _calculate_similarity_matrix(group_1, group_2, similarity_function):
@@ -34,10 +36,10 @@ def keywords_semantic_similarity(
     silent: bool = True,
 ) -> float:
     sim_func = get_similarity_function(similarity_metric)
-    synsets = []
+    synset_groups = []
 
     for keywords in (keywords_1, keywords_2):
-        synset = keywords_to_synsets(
+        synsets = keywords_to_synsets(
             keywords,
             max_lemma_words=max_lemma_words,
             min_lemma_chars=min_lemma_chars,
@@ -45,7 +47,7 @@ def keywords_semantic_similarity(
             keep_duplicates=keep_duplicates,
         )
 
-        if not synset:
+        if not synsets:
             if not silent:
                 warnings.warn(
                     'failed to convert keywords to synsets',
@@ -54,10 +56,9 @@ def keywords_semantic_similarity(
 
             return 0.
 
-        synsets.append(synset)
+        synset_groups.append(synsets)
 
-    ss_1, ss_2 = synsets
-    similarity_matrix = _calculate_similarity_matrix(ss_1, ss_2, sim_func)
+    similarity_matrix = _calculate_similarity_matrix(*synset_groups, sim_func)
 
     return matching_similarity(similarity_matrix, greedy=greedy)
 
@@ -79,5 +80,51 @@ def keywords_string_similarity(
 
     if np.any(similarity_matrix > 1) or np.any(similarity_matrix < 0):
         raise ValueError('incorrect similarity function')
+
+    return matching_similarity(similarity_matrix, greedy=greedy)
+
+
+def keywords_composite_similarity(
+    normalized_keywords_1: List[str],
+    normalized_keywords_2: List[str],
+    synset_similarity_metric: str = 'wup',
+    string_similarity_function: Callable = Levenshtein().get_sim_score,
+    only_nouns: bool = True,
+    greedy: bool = False,
+) -> float:
+    synsets_sim_function = get_similarity_function(synset_similarity_metric)
+
+    synsets_1, keywords_1 = get_available_synsets(
+        normalized_keywords_1,
+        only_nouns=only_nouns,
+    )
+    synsets_2, keywords_2 = get_available_synsets(
+        normalized_keywords_2,
+        only_nouns=only_nouns,
+    )
+
+    n_1 = len(synsets_1) + len(keywords_1)
+    n_2 = len(synsets_2) + len(keywords_2)
+
+    if n_1 == 0 or n_2 == 0:
+        return 0.
+
+    similarity_matrix = np.zeros((n_1, n_2))
+
+    if synsets_1 and synsets_2:
+        synsets_matrix = _calculate_similarity_matrix(
+            synsets_1,
+            synsets_2,
+            synsets_sim_function,
+        )
+        similarity_matrix[:len(synsets_1), :len(synsets_2)] = synsets_matrix
+
+    if keywords_1 and keywords_2:
+        keywords_matrix = _calculate_similarity_matrix(
+            keywords_1,
+            keywords_2,
+            string_similarity_function,
+        )
+        similarity_matrix[len(synsets_1):, len(synsets_2):] = keywords_matrix
 
     return matching_similarity(similarity_matrix, greedy=greedy)

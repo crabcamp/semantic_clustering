@@ -5,7 +5,8 @@ import pytest
 from py_stringmatching import Levenshtein
 
 from keywords_similarity.keywords_similarity import (
-    keywords_semantic_similarity, keywords_string_similarity,
+    keywords_composite_similarity, keywords_semantic_similarity,
+    keywords_string_similarity,
 )
 from keywords_similarity.wn import SIMILARITY_METHODS
 
@@ -121,3 +122,55 @@ def test_keywords_string_similarity():
             keywords_2,
             similarity_function=Levenshtein().get_raw_score,
         )
+
+
+def test_keywords_composite_similarity():
+    keywords_1 = ['pizza', 'skål', 'flertydig']
+    keywords_2 = ['pizza', 'pizzas', 'amazing', 'skål', 'flertydig']
+    result = keywords_composite_similarity(
+        keywords_1,
+        keywords_2,
+        only_nouns=False,
+    )
+    expected = 4 / 5
+    assert math.isclose(result, expected)
+
+    keywords_1 = ['pizza', 'skål', 'flertydig']
+    keywords_2 = ['pizza', 'pizzas', 'amazing', 'skål', 'flertydig']
+    result = keywords_composite_similarity(
+        keywords_1,
+        keywords_2,
+        only_nouns=True,
+    )
+    expected = 1
+    assert math.isclose(result, expected)
+
+    keywords_1 = ['skål', 'flertydig']
+    keywords_2 = ['pizza', 'flertydig']
+    result = keywords_composite_similarity(keywords_2, keywords_1)
+    expected = 1 / 2
+    assert math.isclose(result, expected)
+
+    keywords_1 = ['skål', 'flertydig']
+    keywords_2 = ['flertydig', 'skål']
+    result = keywords_composite_similarity(keywords_2, keywords_1)
+    expected = 1
+    assert math.isclose(result, expected)
+
+    keywords_1 = ['pizza', 'denmark']
+    keywords_2 = ['skål', 'flertydig', 'øresundsbron']
+    result = keywords_composite_similarity(
+        keywords_1,
+        keywords_2,
+        only_nouns=True,
+    )
+    expected = 0
+    assert math.isclose(result, expected)
+
+    result = keywords_composite_similarity([], ['pizza'])
+    expected = 0
+    assert math.isclose(result, expected)
+
+    result = keywords_composite_similarity([], [])
+    expected = 0
+    assert math.isclose(result, expected)
