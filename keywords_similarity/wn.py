@@ -1,6 +1,6 @@
 from functools import lru_cache, partial
 from itertools import chain
-from typing import Any, List
+from typing import Any, List, Tuple
 
 from nltk.corpus import wordnet as wn
 
@@ -39,7 +39,10 @@ def get_similarity_function(method):
         return wup_similarity_cached
 
 
-def get_available_synsets(normalized_keywords, only_nouns=True):
+def get_available_synsets(
+    normalized_keywords: List[str],
+    only_nouns: bool = True,
+) -> Tuple[List[Any], List[str]]:
     synsets = []
     unknown_keywords = []
 
@@ -51,14 +54,13 @@ def get_available_synsets(normalized_keywords, only_nouns=True):
             unknown_keywords.append(keyword)
             continue
 
-        if not only_nouns:
-            synsets.append(keyword_synsets[0])
-            continue
+        synset = keyword_synsets[0]
 
-        for synset in keyword_synsets:
-            if synset.pos() == 'n':
-                synsets.append(synset)
-                break
+        if not only_nouns:
+            synsets.append(synset)
+
+        elif synset.pos() == 'n':
+            synsets.append(synset)
 
     return synsets, unknown_keywords
 
