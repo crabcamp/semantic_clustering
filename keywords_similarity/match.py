@@ -29,7 +29,7 @@ def _greedy_matching_similarity(similarity_matrix):
     non_matched = np.setdiff1d(np.arange(n_2), list(matched_2))
     total_score += similarity_matrix[:, non_matched].max(axis=0).sum()
 
-    return total_score / n_2
+    return float(total_score / n_2)
 
 
 def _hungarian_matching_similarity(similarity_matrix):
@@ -45,7 +45,7 @@ def _hungarian_matching_similarity(similarity_matrix):
 
     similarity = similarity_matrix[ixs_1, ixs_2].mean()
 
-    return similarity
+    return float(similarity)
 
 
 def matching_similarity(similarity_matrix, greedy=False):

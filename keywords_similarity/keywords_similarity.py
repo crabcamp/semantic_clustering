@@ -1,5 +1,6 @@
 import warnings
 from itertools import product
+from typing import Callable, List
 
 import numpy as np
 from py_stringmatching import Levenshtein
@@ -22,16 +23,16 @@ def _calculate_similarity_matrix(group_1, group_2, similarity_function):
 
 
 def keywords_semantic_similarity(
-    keywords_1,
-    keywords_2,
-    similarity_metric='wup',
-    max_lemma_words=3,
-    min_lemma_chars=3,
-    only_nouns=True,
-    keep_duplicates=True,
-    greedy=False,
-    silent=True,
-):
+    keywords_1: List[str],
+    keywords_2: List[str],
+    similarity_metric: str = 'wup',
+    max_lemma_words: int = 3,
+    min_lemma_chars: int = 3,
+    only_nouns: bool = True,
+    keep_duplicates: bool = True,
+    greedy: bool = False,
+    silent: bool = True,
+) -> float:
     sim_func = get_similarity_function(similarity_metric)
     synsets = []
 
@@ -62,11 +63,11 @@ def keywords_semantic_similarity(
 
 
 def keywords_string_similarity(
-    keywords_1,
-    keywords_2,
-    similarity_function=Levenshtein().get_sim_score,
-    greedy=False,
-):
+    keywords_1: List[str],
+    keywords_2: List[str],
+    similarity_function: Callable = Levenshtein().get_sim_score,
+    greedy: bool = False,
+) -> float:
     if not keywords_1 or not keywords_2:
         return 0.
 
