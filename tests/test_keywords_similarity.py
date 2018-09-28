@@ -167,6 +167,18 @@ def test_keywords_composite_similarity():
     expected = 0
     assert math.isclose(result, expected)
 
+    keywords_1 = ['pizza', 'pasta', 'lasagna', 'restaurant']
+    keywords_2 = ['hotdog', 'coffee', 'burgers']
+    result = keywords_composite_similarity(keywords_1, keywords_2)
+    expected = keywords_semantic_similarity(keywords_1, keywords_2)
+    assert math.isclose(result, expected)
+
+    keywords_1 = ['økologi', 'opskrifter', 'betyder', 'rejer', 'kvalitet']
+    keywords_2 = ['opskrift', 'rejer', 'håndpillede rejer']
+    result = keywords_composite_similarity(keywords_1, keywords_2)
+    expected = keywords_string_similarity(keywords_1, keywords_2)
+    assert math.isclose(result, expected)
+
     result = keywords_composite_similarity([], ['pizza'])
     expected = 0
     assert math.isclose(result, expected)
