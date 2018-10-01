@@ -33,7 +33,6 @@ def keywords_semantic_similarity(
     only_nouns: bool = True,
     keep_duplicates: bool = True,
     greedy: bool = False,
-    silent: bool = True,
 ) -> float:
     sim_func = get_similarity_function(similarity_metric)
     synset_groups = []
@@ -48,11 +47,10 @@ def keywords_semantic_similarity(
         )
 
         if not synsets:
-            if not silent:
-                warnings.warn(
-                    'failed to convert keywords to synsets',
-                    RuntimeWarning,
-                )
+            warnings.warn(
+                'failed to convert keywords to synsets',
+                RuntimeWarning,
+            )
 
             return 0.
 

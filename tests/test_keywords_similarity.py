@@ -88,16 +88,8 @@ def test_keywords_semantic_similarity():
             similarity_metric='Skål',
         )
 
-    result = keywords_semantic_similarity(keywords_1, unknown_keywords)
-    expected = 0.
-    assert math.isclose(result, expected)
-
     with pytest.warns(RuntimeWarning):
-        result = keywords_semantic_similarity(
-            keywords_1,
-            unknown_keywords,
-            silent=False,
-        )
+        result = keywords_semantic_similarity(keywords_1, unknown_keywords)
         expected = 0.
         assert math.isclose(result, expected)
 
