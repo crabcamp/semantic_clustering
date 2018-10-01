@@ -1,4 +1,49 @@
-from keywords_similarity.wn import _subsequences_indices, normalize_keywords
+from nltk.corpus import wordnet as wn
+
+from keywords_similarity.wn import (
+    _subsequences_indices, get_available_synsets, normalize_keywords,
+)
+
+
+def test_get_available_synsets():
+    keywords = ['automotive', 'vehicle', 'sexual', 'harassment', 'skål']
+    result = get_available_synsets(keywords, only_nouns=True)
+    expected = (
+        [
+            wn.synset('vehicle.n.01'),
+            wn.synset('harassment.n.01'),
+        ],
+        ['skål'],
+    )
+    assert result == expected
+
+    keywords = ['automotive', 'vehicle', 'sexual', 'harassment', 'skål']
+    result = get_available_synsets(keywords, only_nouns=False)
+    expected = (
+        [
+            wn.synset('automotive.a.01'),
+            wn.synset('vehicle.n.01'),
+            wn.synset('sexual.a.01'),
+            wn.synset('harassment.n.01'),
+        ],
+        ['skål'],
+    )
+    assert result == expected
+
+    keywords = ['vehicle']
+    result = get_available_synsets(keywords)
+    expected = ([wn.synset('vehicle.n.01')], [])
+    assert result == expected
+
+    keywords = ['skål']
+    result = get_available_synsets(keywords)
+    expected = ([], ['skål'])
+    assert result == expected
+
+    keywords = []
+    result = get_available_synsets(keywords)
+    expected = ([], [])
+    assert result == expected
 
 
 def test_normalize_keywords():
