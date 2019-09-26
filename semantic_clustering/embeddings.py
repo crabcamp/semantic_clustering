@@ -7,26 +7,26 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 
-class KeytermsVectorizer:
+class SentenceEncoder:
     def __init__(self, model_path):
         self.model_path = model_path
+        self._graph = tf.compat.v1.Graph()
 
     def _load(self):
-        if hasattr(self, '_vectorizer'):
+        if hasattr(self, '_encode'):
             return
 
-        with tf.Graph().as_default():
-            sentences = tf.compat.v1.placeholder(tf.string)
-            embed = hub.Module(self.model_path)
-            embeddings = embed(sentences)
+        with self._graph.as_default():
+            encoder = hub.Module(self.model_path)
+            encoder_input = tf.compat.v1.placeholder(tf.string)
+            embeddings = encoder(encoder_input)
             session = tf.compat.v1.train.MonitoredSession()
 
-            def vectorize(phrases):
-                return session.run(embeddings, {sentences: phrases})
+            def encode(sentences):
+                return session.run(embeddings, {encoder_input: sentences})
 
-            self._vectorizer = vectorize
+            self._encode = encode
 
-    def vectorize(self, keyterms):
+    def encode(self, sentences):
         self._load()
-
-        return self._vectorizer(keyterms)
+        return self._encode(sentences)
