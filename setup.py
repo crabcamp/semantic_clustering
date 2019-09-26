@@ -13,9 +13,9 @@ with readme.open(mode='rt', encoding='utf-8') as fp:
     readme_text = fp.read()
 
 setup(
-    name='keywords_similarity',
-    version='0.0.1',
-    description='Semantic clustering of keywords groups.',
+    name='semantic_clustering',
+    version='0.0.2',
+    description='Semantic clustering of keyphrases groups.',
     long_description=readme_text,
     license='MIT',
     author='Luka Shostenko',

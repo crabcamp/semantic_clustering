@@ -1,8 +1,8 @@
 
 lint:
-	flake8 --show-source keywords_similarity
+	flake8 --show-source semantic_clustering
 	flake8 --show-source tests
-	isort --check-only -rc keywords_similarity --diff
+	isort --check-only -rc semantic_clustering --diff
 	isort --check-only -rc tests --diff
 
 test:

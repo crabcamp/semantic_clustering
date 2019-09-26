@@ -1,4 +1,2 @@
-nltk>=3.3
 numpy>=1.13.0
-py-stringmatching>=0.4.0
 scipy>=1.0.0

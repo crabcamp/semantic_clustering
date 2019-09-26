@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 
-from keywords_similarity.match import (
+from semantic_clustering.match import (
     _greedy_matching_similarity, _hungarian_matching_similarity,
     matching_similarity,
 )
