@@ -1,4 +1,4 @@
-keywords_similarity
+semantic_clustering
 ===================
 
 Semantic clustering of keyword groups
