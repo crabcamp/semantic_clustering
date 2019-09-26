@@ -10,13 +10,12 @@ tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 class SentenceEncoder:
     def __init__(self, model_path):
         self.model_path = model_path
-        self._graph = tf.compat.v1.Graph()
 
     def _load(self):
         if hasattr(self, '_encode'):
             return
 
-        with self._graph.as_default():
+        with tf.compat.v1.Graph().as_default():
             encoder = hub.Module(self.model_path)
             encoder_input = tf.compat.v1.placeholder(tf.string)
             embeddings = encoder(encoder_input)
