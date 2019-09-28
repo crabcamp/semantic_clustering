@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
 
@@ -29,3 +30,9 @@ class SentenceEncoder:
     def encode(self, sentences):
         self._load()
         return self._encode(sentences)
+
+    def similarity_matrix(self, sentences_1, sentences_2):
+        edge = len(sentences_1)
+        embeggings = self.encode(sentences_1 + sentences_2)
+
+        return np.dot(embeggings[:edge], embeggings[edge:].T)
